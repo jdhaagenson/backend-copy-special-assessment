@@ -7,7 +7,7 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 
 # give credits
-__author__ = "???"
+__author__ = 'Jordan Haagenson'
 
 import re
 import os
@@ -18,19 +18,40 @@ import argparse
 
 
 def get_special_paths(dirname):
-    """Given a dirname, returns a list of all its special files."""
-    # your code here
-    return
+    '''
+    returns a list of the absolute paths of the special files in the given directory, 
+    but not deeper (no recursive search)
+    '''
+    files = os.listdir(dirname)
+    abspath = os.path.abspath(dirname)
+    special = []
+    for file in files:
+        if re.search(r'__\w+__', file):
+            special.append(os.path.join(abspath, file))
+            print(os.path.join(abspath, file))
+    return special
 
 
 def copy_to(path_list, dest_dir):
-    # your code here
+    '''given a list of file paths, copies those files into the given directory'''
+    abspath = os.path.abspath(dest_dir)
+    if not os.path.exists(abspath):
+        os.makedirs(abspath)
+    for path in path_list:
+        shutil.copy(path, abspath)
     return
 
 
 def zip_to(path_list, dest_zip):
-    # your code here
-    return
+    '''given a list of file paths, zip those files up into the given zip path'''
+    cmd = "zip -j " + dest_zip + " '" + "' '".join(path_list) + "'"
+    print("command to be executed: ")
+    print("`zip -j <zipfile> <each of the file paths>")
+    completed_process = subprocess.run(cmd)
+    if completed_process.check_returncode() != 0:
+        sys.stderr.write(completed_process.check_output())
+    print(completed_process.check_returncode())
+    return completed_process.check_output()
 
 
 def main(args):
@@ -39,8 +60,10 @@ def main(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('--todir', help='dest dir for special files')
     parser.add_argument('--tozip', help='dest zipfile for special files')
-    # TODO: add one more argument definition to parse the 'from_dir' argument
+    parser.add_argument('fromdir', help='source directory')
     ns = parser.parse_args(args)
+    print(dir(ns))
+    # args = parser.parse_args()
 
     # TODO: you must write your own code to get the command line args.
     # Read the docs and examples for the argparse module about how to do this.
@@ -51,7 +74,9 @@ def main(args):
     # exit(1).
 
     # Your code here: Invoke (call) your functions
+    if ns.args == 
 
+    
 
 if __name__ == "__main__":
     main(sys.argv[1:])
